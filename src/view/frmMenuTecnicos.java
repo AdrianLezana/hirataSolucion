@@ -62,6 +62,11 @@ public class frmMenuTecnicos extends javax.swing.JFrame {
         });
 
         btnInventario.setText("Inventario de repuestos");
+        btnInventario.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                btnInventarioActionPerformed(evt);
+            }
+        });
 
         btnCerrar.setText("Cerrar");
         btnCerrar.addActionListener(new java.awt.event.ActionListener() {
@@ -134,6 +139,11 @@ public class frmMenuTecnicos extends javax.swing.JFrame {
         s.setVisible(true);
 
     }//GEN-LAST:event_btnActuSoftwareActionPerformed
+
+    private void btnInventarioActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnInventarioActionPerformed
+        frmInventarioPiezas i = new frmInventarioPiezas();
+        i.setVisible(true);
+    }//GEN-LAST:event_btnInventarioActionPerformed
 
     /**
      * @param args the command line arguments

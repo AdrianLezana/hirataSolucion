@@ -159,14 +159,25 @@
                                       <Component id="txtIdTecnico" min="-2" max="-2" attributes="0"/>
                                   </Group>
                                   <Component id="jScrollPane3" alignment="0" max="32767" attributes="0"/>
-                                  <Component id="lblDescripcion" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblObservaciones" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblTipo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cmbTipo" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblFecha" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="lblTecnico" alignment="0" min="-2" max="-2" attributes="0"/>
-                                  <Component id="cmbTecnico" alignment="0" min="-2" max="-2" attributes="0"/>
                                   <Component id="jScrollPane2" alignment="0" max="32767" attributes="0"/>
+                                  <Group type="103" groupAlignment="0" attributes="0">
+                                      <Component id="lblDescripcion" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblObservaciones" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblFecha" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="lblTecnico" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      <Component id="cmbTecnico" alignment="0" min="-2" max="-2" attributes="0"/>
+                                  </Group>
+                                  <Group type="102" alignment="0" attributes="0">
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="cmbTipo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                          <Component id="lblTipo" alignment="0" min="-2" max="-2" attributes="0"/>
+                                      </Group>
+                                      <EmptySpace min="-2" pref="99" max="-2" attributes="0"/>
+                                      <Group type="103" groupAlignment="0" attributes="0">
+                                          <Component id="lblBuscar" min="-2" max="-2" attributes="0"/>
+                                          <Component id="txtBuscar" min="-2" pref="145" max="-2" attributes="0"/>
+                                      </Group>
+                                  </Group>
                               </Group>
                           </Group>
                       </Group>
@@ -178,9 +189,15 @@
               <Group type="103" groupAlignment="0" attributes="0">
                   <Group type="102" alignment="0" attributes="0">
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="lblTipo" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="lblTipo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="lblBuscar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
-                      <Component id="cmbTipo" min="-2" max="-2" attributes="0"/>
+                      <Group type="103" groupAlignment="3" attributes="0">
+                          <Component id="cmbTipo" alignment="3" min="-2" max="-2" attributes="0"/>
+                          <Component id="txtBuscar" alignment="3" min="-2" max="-2" attributes="0"/>
+                      </Group>
                       <EmptySpace max="-2" attributes="0"/>
                       <Component id="lblDescripcion" min="-2" max="-2" attributes="0"/>
                       <EmptySpace max="-2" attributes="0"/>
@@ -347,6 +364,16 @@
               <AuxValues>
                 <AuxValue name="JavaCodeGenerator_TypeParameters" type="java.lang.String" value="&lt;TecnicoCombo&gt;"/>
               </AuxValues>
+            </Component>
+            <Component class="javax.swing.JTextField" name="txtBuscar">
+              <Events>
+                <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="txtBuscarKeyReleased"/>
+              </Events>
+            </Component>
+            <Component class="javax.swing.JLabel" name="lblBuscar">
+              <Properties>
+                <Property name="text" type="java.lang.String" value="Buscar"/>
+              </Properties>
             </Component>
           </SubComponents>
         </Container>

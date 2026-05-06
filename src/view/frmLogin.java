@@ -1,7 +1,6 @@
 package view;
 
 import controller.Login;
-import java.sql.ResultSet;
 import javax.swing.JOptionPane;
 
 public class frmLogin extends javax.swing.JFrame {
@@ -37,8 +36,6 @@ public class frmLogin extends javax.swing.JFrame {
         btnIngresar = new javax.swing.JButton();
         btnCerrar = new javax.swing.JButton();
         jMenuBar2 = new javax.swing.JMenuBar();
-        jMenu3 = new javax.swing.JMenu();
-        jMenuItem1 = new javax.swing.JMenuItem();
 
         jMenu1.setText("File");
         jMenuBar1.add(jMenu1);
@@ -80,18 +77,6 @@ public class frmLogin extends javax.swing.JFrame {
         });
         jPanel1.add(btnCerrar, new org.netbeans.lib.awtextra.AbsoluteConstraints(210, 220, -1, -1));
 
-        jMenu3.setText("Más opciones");
-
-        jMenuItem1.setText("Técnico Mant.");
-        jMenuItem1.addActionListener(new java.awt.event.ActionListener() {
-            public void actionPerformed(java.awt.event.ActionEvent evt) {
-                jMenuItem1ActionPerformed(evt);
-            }
-        });
-        jMenu3.add(jMenuItem1);
-
-        jMenuBar2.add(jMenu3);
-
         setJMenuBar(jMenuBar2);
 
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
@@ -117,24 +102,33 @@ public class frmLogin extends javax.swing.JFrame {
     }//GEN-LAST:event_btnCerrarActionPerformed
 
     private void btnIngresarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnIngresarActionPerformed
+
         String usuario = txtUsuario.getText();
         String clave = new String(txtClave.getPassword());
 
         Login login = new Login();
+        String tipo = login.autenticar(usuario, clave);
 
-        if (login.validarUsuario(usuario, clave)) {
-            JOptionPane.showMessageDialog(this, "Bienvenido usuario");
-            frmRegistro registro = new frmRegistro();
-            registro.setVisible(true);
+        if (tipo != null) {
+
+            JOptionPane.showMessageDialog(this, "Bienvenido " + tipo);
+
+            if (tipo.equalsIgnoreCase("TECNICO")) {
+                frmMenuTecnicos tec = new frmMenuTecnicos();
+                tec.setVisible(true);
+            } else {
+                // ADMIN, OPERADOR, CONDUCTOR
+                frmRegistro reg = new frmRegistro();
+                reg.setVisible(true);
+            }
+
+            this.dispose(); // cierra login
+
         } else {
-            JOptionPane.showMessageDialog(this, "Credenciales incorrectas");
+            JOptionPane.showMessageDialog(this, "Usuario o clave incorrecta.");
         }
-    }//GEN-LAST:event_btnIngresarActionPerformed
 
-    private void jMenuItem1ActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_jMenuItem1ActionPerformed
-        frmLoginTecnico tecnico = new frmLoginTecnico();
-        tecnico.setVisible(true);
-    }//GEN-LAST:event_jMenuItem1ActionPerformed
+    }//GEN-LAST:event_btnIngresarActionPerformed
 
     /**
      * @param args the command line arguments
@@ -177,10 +171,8 @@ public class frmLogin extends javax.swing.JFrame {
     private javax.swing.JButton btnIngresar;
     private javax.swing.JMenu jMenu1;
     private javax.swing.JMenu jMenu2;
-    private javax.swing.JMenu jMenu3;
     private javax.swing.JMenuBar jMenuBar1;
     private javax.swing.JMenuBar jMenuBar2;
-    private javax.swing.JMenuItem jMenuItem1;
     private javax.swing.JPanel jPanel1;
     private javax.swing.JLabel lblClave;
     private javax.swing.JLabel lblUsuario;

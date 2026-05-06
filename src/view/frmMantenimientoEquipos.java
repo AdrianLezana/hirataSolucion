@@ -25,6 +25,34 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
         txtIdTecnico.setVisible(false);
     }
 
+    private void buscarMantenimiento(String texto) {
+
+        MantenimientoEquipoService service = new MantenimientoEquipoService();
+        List<Object[]> lista = service.buscarMantenimientos(texto);
+
+        DefaultTableModel modelo = new DefaultTableModel();
+        modelo.setColumnIdentifiers(new Object[]{
+            "ID", "ID Equipo", "Equipo", "Técnico", "Tipo", "Descripción", "Observaciones", "Fecha"
+        });
+
+        if (lista != null) {
+            for (Object[] fila : lista) {
+                modelo.addRow(fila);
+            }
+        }
+
+        tblHistorialMantenimientos.setModel(modelo);
+
+        // ? Ocultar IDs (igual que antes)
+        tblHistorialMantenimientos.getColumnModel().getColumn(0).setMinWidth(0);
+        tblHistorialMantenimientos.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblHistorialMantenimientos.getColumnModel().getColumn(0).setWidth(0);
+
+        tblHistorialMantenimientos.getColumnModel().getColumn(1).setMinWidth(0);
+        tblHistorialMantenimientos.getColumnModel().getColumn(1).setMaxWidth(0);
+        tblHistorialMantenimientos.getColumnModel().getColumn(1).setWidth(0);
+    }
+
     private void seleccionarTecnicoEnCombo(String nombre) {
         for (int i = 0; i < cmbTecnico.getItemCount(); i++) {
             TecnicoCombo t = cmbTecnico.getItemAt(i);
@@ -42,7 +70,7 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
 
         DefaultTableModel modelo = new DefaultTableModel();
         modelo.setColumnIdentifiers(new Object[]{
-            "ID", "ID Equipo", "Técnico", "Tipo", "Descripción", "Observaciones", "Fecha"
+            "ID", "ID Equipo", "Equipo", "Técnico", "Tipo", "Descripción", "Observaciones", "Fecha"
         });
 
         for (Object[] fila : lista) {
@@ -50,6 +78,15 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
         }
 
         tblHistorialMantenimientos.setModel(modelo);
+
+        tblHistorialMantenimientos.getColumnModel().getColumn(0).setMinWidth(0);
+        tblHistorialMantenimientos.getColumnModel().getColumn(0).setMaxWidth(0);
+        tblHistorialMantenimientos.getColumnModel().getColumn(0).setWidth(0);
+
+        tblHistorialMantenimientos.getColumnModel().getColumn(1).setMinWidth(0);
+        tblHistorialMantenimientos.getColumnModel().getColumn(1).setMaxWidth(0);
+        tblHistorialMantenimientos.getColumnModel().getColumn(1).setWidth(0);
+
     }
 
     private void limpiarCampos() {
@@ -75,12 +112,12 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
             cmbTecnico.addItem(t);
         }
     }
-    
+
     public boolean validarDatos() {
         return (txtFecha.getText().isEmpty() || cmbTipo.getSelectedItem().toString().isEmpty() || txtaDescripcion.getText().isEmpty() || txtaObservaciones.getText().isEmpty() || cmbTecnico.getSelectedItem().toString().isEmpty());
     }
-    
-    public void validacionCorrecta(){
+
+    public void validacionCorrecta() {
         if (validarDatos()) {
             JOptionPane.showMessageDialog(this, "Faltan datos.");
             return;
@@ -121,6 +158,8 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
         btnCerrar = new javax.swing.JButton();
         lblTecnico = new javax.swing.JLabel();
         cmbTecnico = new javax.swing.JComboBox<>();
+        txtBuscar = new javax.swing.JTextField();
+        lblBuscar = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.EXIT_ON_CLOSE);
 
@@ -225,6 +264,14 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
             }
         });
 
+        txtBuscar.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                txtBuscarKeyReleased(evt);
+            }
+        });
+
+        lblBuscar.setText("Buscar");
+
         javax.swing.GroupLayout pnlDetallesLayout = new javax.swing.GroupLayout(pnlDetalles);
         pnlDetalles.setLayout(pnlDetallesLayout);
         pnlDetallesLayout.setHorizontalGroup(
@@ -254,23 +301,34 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                                 .addComponent(txtIdTecnico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                             .addComponent(jScrollPane3)
-                            .addComponent(lblDescripcion)
-                            .addComponent(lblObservaciones)
-                            .addComponent(lblTipo)
-                            .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(lblFecha)
-                            .addComponent(lblTecnico)
-                            .addComponent(cmbTecnico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jScrollPane2))))
+                            .addComponent(jScrollPane2)
+                            .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                .addComponent(lblDescripcion)
+                                .addComponent(lblObservaciones)
+                                .addComponent(lblFecha)
+                                .addComponent(lblTecnico)
+                                .addComponent(cmbTecnico, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addGroup(pnlDetallesLayout.createSequentialGroup()
+                                .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(lblTipo))
+                                .addGap(99, 99, 99)
+                                .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                                    .addComponent(lblBuscar)
+                                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, 145, javax.swing.GroupLayout.PREFERRED_SIZE))))))
                 .addContainerGap(16, Short.MAX_VALUE))
         );
         pnlDetallesLayout.setVerticalGroup(
             pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(pnlDetallesLayout.createSequentialGroup()
                 .addContainerGap()
-                .addComponent(lblTipo)
+                .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(lblTipo)
+                    .addComponent(lblBuscar))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
-                .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                .addGroup(pnlDetallesLayout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                    .addComponent(cmbTipo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addComponent(txtBuscar, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
                 .addComponent(lblDescripcion)
                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
@@ -345,7 +403,7 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
     private void btnRegistrarActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_btnRegistrarActionPerformed
 
         validacionCorrecta();
-        
+
         try {
             MantenimientoEquipo m = new MantenimientoEquipo();
 
@@ -385,7 +443,7 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
             JOptionPane.showMessageDialog(this, "Faltan datos.");
             return;
         }
-                
+
         try {
             MantenimientoEquipo m = new MantenimientoEquipo();
 
@@ -458,6 +516,18 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
         }
     }//GEN-LAST:event_tblHistorialMantenimientosMouseClicked
 
+    private void txtBuscarKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_txtBuscarKeyReleased
+
+        String texto = txtBuscar.getText();
+
+        if (texto.isEmpty()) {
+            cargarTablaMantenimiento();
+        } else {
+            buscarMantenimiento(texto);
+        }
+
+    }//GEN-LAST:event_txtBuscarKeyReleased
+
     /**
      * @param args the command line arguments
      */
@@ -505,6 +575,7 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
     private javax.swing.JScrollPane jScrollPane1;
     private javax.swing.JScrollPane jScrollPane2;
     private javax.swing.JScrollPane jScrollPane3;
+    private javax.swing.JLabel lblBuscar;
     private javax.swing.JLabel lblDescripcion;
     private javax.swing.JLabel lblFecha;
     private javax.swing.JLabel lblObservaciones;
@@ -513,6 +584,7 @@ public class frmMantenimientoEquipos extends javax.swing.JFrame {
     private javax.swing.JPanel pnlDetalles;
     private javax.swing.JPanel pnlHistorial;
     private javax.swing.JTable tblHistorialMantenimientos;
+    private javax.swing.JTextField txtBuscar;
     private javax.swing.JTextField txtFecha;
     private javax.swing.JTextField txtIdEquipo;
     private javax.swing.JTextField txtIdMantenimiento;

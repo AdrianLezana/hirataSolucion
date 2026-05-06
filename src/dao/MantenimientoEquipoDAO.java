@@ -5,10 +5,8 @@ import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
 import java.sql.SQLException;
-import java.sql.Statement;
 import java.util.ArrayList;
 import java.util.List;
-import model.Equipo;
 import model.MantenimientoEquipo;
 
 public class MantenimientoEquipoDAO {
@@ -72,10 +70,18 @@ public class MantenimientoEquipoDAO {
         List<Object[]> lista = new ArrayList<>();
 
         String sql = """
-        SELECT m.idMantenimiento, m.idEquipo, t.nombreReal,
-               m.tipoMantenimiento, m.descripcion, m.observaciones, m.fecha
-        FROM mantenimientoEquipos m
-        INNER JOIN tecnicos t ON m.idTecnico = t.idTecnico
+        SELECT 
+                    m.idMantenimiento,
+                    m.idEquipo,
+                    CONCAT(e.nombre, ' - ', e.marca, ' ', e.modelo) AS equipo,
+                    t.nombreReal,
+                    m.tipoMantenimiento,
+                    m.descripcion,
+                    m.observaciones,
+                    m.fecha
+                FROM mantenimientoEquipos m
+                INNER JOIN tecnicos t ON m.idTecnico = t.idTecnico
+                INNER JOIN equipos e ON m.idEquipo = e.idEquipo
     """;
 
         PreparedStatement ps = con.prepareStatement(sql);
@@ -85,6 +91,59 @@ public class MantenimientoEquipoDAO {
             lista.add(new Object[]{
                 rs.getInt("idMantenimiento"),
                 rs.getInt("idEquipo"),
+                rs.getString("equipo"),
+                rs.getString("nombreReal"),
+                rs.getString("tipoMantenimiento"),
+                rs.getString("descripcion"),
+                rs.getString("observaciones"),
+                rs.getString("fecha")
+            });
+        }
+
+        return lista;
+    }
+
+    public List<Object[]> buscarMantenimientos(String texto, Connection con) throws SQLException {
+        List<Object[]> lista = new ArrayList<>();
+
+        String sql = """
+        SELECT 
+            m.idMantenimiento,
+            m.idEquipo,
+            CONCAT(e.nombre, ' - ', e.marca, ' ', e.modelo) AS equipo,
+            t.nombreReal,
+            m.tipoMantenimiento,
+            m.descripcion,
+            m.observaciones,
+            m.fecha
+        FROM mantenimientoEquipos m
+        INNER JOIN tecnicos t ON m.idTecnico = t.idTecnico
+        INNER JOIN equipos e ON m.idEquipo = e.idEquipo
+        WHERE 
+            e.nombre LIKE ? OR
+            e.marca LIKE ? OR
+            e.modelo LIKE ? OR
+            t.nombreReal LIKE ? OR
+            m.tipoMantenimiento LIKE ?
+    """;
+
+        PreparedStatement ps = con.prepareStatement(sql);
+
+        String filtro = "%" + texto + "%";
+
+        ps.setString(1, filtro);
+        ps.setString(2, filtro);
+        ps.setString(3, filtro);
+        ps.setString(4, filtro);
+        ps.setString(5, filtro);
+
+        ResultSet rs = ps.executeQuery();
+
+        while (rs.next()) {
+            lista.add(new Object[]{
+                rs.getInt("idMantenimiento"),
+                rs.getInt("idEquipo"),
+                rs.getString("equipo"),
                 rs.getString("nombreReal"),
                 rs.getString("tipoMantenimiento"),
                 rs.getString("descripcion"),

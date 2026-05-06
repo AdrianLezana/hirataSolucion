@@ -61,4 +61,13 @@ public class MantenimientoEquipoService {
         }
     }
 
+    public List<Object[]> buscarMantenimientos(String texto) {
+        try (Connection con = Conexion.getConnection()) {
+            return dao.buscarMantenimientos(texto, con);
+        } catch (SQLException e) {
+            System.out.println("Error buscar mantenimientos: " + e.getMessage());
+            return null;
+        }
+    }
+
 }

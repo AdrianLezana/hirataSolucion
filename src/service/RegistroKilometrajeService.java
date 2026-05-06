@@ -54,7 +54,7 @@ public class RegistroKilometrajeService {
 
             conexion.commit();
 
-            //JOptionPane.showMessageDialog(null, "Kilometraje registrado correctamente");
+            JOptionPane.showMessageDialog(null, "Kilometraje registrado correctamente");
         } catch (Exception e) {
 
             try {

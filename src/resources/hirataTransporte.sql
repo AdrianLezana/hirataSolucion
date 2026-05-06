@@ -96,9 +96,22 @@ CREATE TABLE actualizacionSoftware (
 
 CREATE TABLE inventarioPiezas (
     idPieza INT AUTO_INCREMENT PRIMARY KEY,
-    nombre VARCHAR(100) NOT NULL,
+    nombre VARCHAR(100) NOT NULL,     
     cantidad INT NOT NULL,
+    tipo ENUM('DISCO', 'MEMORIA', 'FUENTE', 'PERIFERICO', 'OTRO') NOT NULL,
+    estado ENUM('BUEN ESTADO', 'EN REPARACIÓN', 'FUERA DE SERVICIO') DEFAULT 'BUEN ESTADO',
     descripcion TEXT
+);
+
+CREATE TABLE movimientoPiezas (
+    idMovimiento INT AUTO_INCREMENT PRIMARY KEY,
+    idPieza INT NOT NULL,
+    tipoMovimiento ENUM('ENTRADA', 'SALIDA') NOT NULL,
+    cantidad INT NOT NULL,
+    fecha DATETIME DEFAULT CURRENT_TIMESTAMP,
+    descripcion TEXT,
+
+    FOREIGN KEY (idPieza) REFERENCES inventarioPiezas(idPieza)
 );
 
 USE hirataTransporte;
@@ -150,9 +163,30 @@ INSERT INTO actualizacionSoftware (idEquipo, idSoftware, descripcion) VALUES
 (3, 4, 'Actualización de lector PDF'),
 (5, 5, 'Actualización de antivirus');
 
-INSERT INTO inventarioPiezas (nombre, cantidad, descripcion) VALUES
-('Disco SSD 500GB', 10, 'Para reemplazo de discos antiguos'),
-('Memoria RAM 8GB DDR4', 15, 'Ampliación de memoria'),
-('Fuente de poder 600W', 5, 'Reemplazo en PCs'),
-('Mouse USB', 20, 'Periféricos de oficina'),
-('Teclado USB', 18, 'Periféricos estándar');
+INSERT INTO inventarioPiezas (nombre, tipo, cantidad, estado, descripcion) VALUES
+('Disco Duro SSD 1TB', 'MEMORIA', 10, 'BUEN ESTADO', 'SSD para equipos de oficina'),
+('Memoria RAM 8GB DDR4', 'MEMORIA', 15, 'BUEN ESTADO', 'RAM estándar para PCs'),
+('Fuente de Poder 500W', 'FUENTE', 8, 'BUEN ESTADO', 'Fuentes ATX genéricas'),
+('Mouse USB', 'PERIFERICO', 20, 'BUEN ESTADO', 'Mouse óptico básico'),
+('Teclado USB', 'PERIFERICO', 12, 'EN REPARACION', 'Algunos con teclas defectuosas');
+
+INSERT INTO movimientoPiezas (idPieza, tipoMovimiento, cantidad, descripcion) VALUES
+-- PIEZA 1 (SSD) ? stock final 10
+(1, 'ENTRADA', 12, 'Compra inicial'),
+(1, 'SALIDA', 2, 'Instalación en equipos'),
+
+-- PIEZA 2 (RAM) ? stock final 15
+(2, 'ENTRADA', 20, 'Compra inicial'),
+(2, 'SALIDA', 5, 'Reemplazo en PCs'),
+
+-- PIEZA 3 (Fuente) ? stock final 8
+(3, 'ENTRADA', 10, 'Ingreso inicial'),
+(3, 'SALIDA', 2, 'Reparaciones'),
+
+-- PIEZA 4 (Mouse) ? stock final 20
+(4, 'ENTRADA', 25, 'Compra masiva'),
+(4, 'SALIDA', 5, 'Entrega a usuarios'),
+
+-- PIEZA 5 (Teclado) ? stock final 12
+(5, 'ENTRADA', 15, 'Ingreso inicial'),
+(5, 'SALIDA', 3, 'Defectuosos retirados');
